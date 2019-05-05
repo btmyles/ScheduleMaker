@@ -3,6 +3,9 @@ from selenium.webdriver.support.select import Select
 from bs4 import BeautifulSoup
 import re
 
+#Input courseID
+courseID = 'ME*2111'
+
 driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
 
 term = '2019/FA'
@@ -38,27 +41,32 @@ submit.click()
 soup = BeautifulSoup(browser.page_source, 'html.parser')
 
 table = soup.find('table', id='course-list')
-print(table)
+#print(table.prettify())
 
-#All text in table
-#tabtext = table.text.strip()
-#print(tabtext)
+headings = table.find('thead').find_all('th')
 
-# if the row contans a section number, grab the 6th and 7th element in the row
-# if the row does not, attempt to grab the 3rd and 4th. If this breaks dont worry
+# Find what index the CourseID is under
+for i in range(len(headings)-1):
+    print(headings[i])
+    if 'ID' in headings[i]:
+        indID = i
+# More code needed here to improve robustness
+# Add if statements similar to the 'ID' one.
+indCourse = 1
+indSection = 2
+indTitle = 3
+indInstructor = 4
+indDays = 5
+indTimes = 6
+indRoom = 7
 
+# Get all rows
+rows = table.find('tbody').find_all('tr')
 
-
-row = table.findAll('tr')[0]
-print(row)
-
-
-# Get list of all rows with the beginning of a course
-# for row in table.find_all('tr'):
-#     for col in row.find_all('td'):
-#         if re.search('FR', col.text):
-            
-
+# Find the row containing the course specified
+for i in range(len(rows)-1):
+    if courseID in rows[i].get_text():
+        print(rows[i].find_all('td')[indTimes])
 
 
 
