@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 
 #Input courseID
-courseID = 'ME*2111'
+courseID = 'CS*1023'
 
 driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
 
@@ -35,8 +35,8 @@ submit = browser.find_element_by_xpath('/html/body/div[1]/div/div/div/div/div/di
 submit.click()
 
 #Save html to file
-#with open("page.html", "w") as f:
-#    f.write(browser.page_source)
+with open("page.html", "w") as f:
+    f.write(browser.page_source)
 
 soup = BeautifulSoup(browser.page_source, 'html.parser')
 
@@ -47,7 +47,6 @@ headings = table.find('thead').find_all('th')
 
 # Find what index the CourseID is under
 for i in range(len(headings)-1):
-    print(headings[i])
     if 'ID' in headings[i]:
         indID = i
 # More code needed here to improve robustness
@@ -62,11 +61,26 @@ indRoom = 7
 
 # Get all rows
 rows = table.find('tbody').find_all('tr')
+#print('\n')
+#print(rows)
 
 # Find the row containing the course specified
+print('Finding times:')
+# Not prepared for a course offered twice
 for i in range(len(rows)-1):
-    if courseID in rows[i].get_text():
-        print(rows[i].find_all('td')[indTimes])
+	if courseID in rows[i].get_text():
+		cols = rows[i].find_all('td')
+		# Print first time slot
+		print('Class\t', end='')
+		print(cols[indDays].get_text() + '\t', end='')
+		print(cols[indTimes].get_text() + '\t')
+		# Print following time slots
+		# Index 3 is consistently the location for times in secondary row
+		secCols = rows[i+1].find_all('td')
+		print(secCols[0].get_text() + '\t', end='')
+		print(secCols[2].get_text() + '\t', end='')
+		print(secCols[3].get_text())
+
 
 
 
