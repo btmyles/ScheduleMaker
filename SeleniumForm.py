@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 
 #Input courseID
-courseID = 'CS*1023'
+courseID = 'CS*1083'
 
 driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
 
@@ -70,16 +70,32 @@ print('Finding times:')
 for i in range(len(rows)-1):
 	if courseID in rows[i].get_text():
 		cols = rows[i].find_all('td')
+
 		# Print first time slot
 		print('Class\t', end='')
 		print(cols[indDays].get_text() + '\t', end='')
 		print(cols[indTimes].get_text() + '\t')
+
 		# Print following time slots
-		# Index 3 is consistently the location for times in secondary row
-		secCols = rows[i+1].find_all('td')
-		print(secCols[0].get_text() + '\t', end='')
-		print(secCols[2].get_text() + '\t', end='')
-		print(secCols[3].get_text())
+		# Do while the current line has a time slot within it:
+		j=i
+		checkNext = True
+		while checkNext:
+
+			checkNext = False
+			secCols = rows[j+1].find_all('td')
+			for col in secCols:
+				# If the row contains a time slot then read the row
+				check = re.search('\d\d:\d\d..-\d\d:\d\d..', col.get_text())
+				if check:
+					# This row should be printed
+					checkNext = True
+
+					# Indices are consistent in secondary rows
+					print(secCols[0].get_text() + '\t', end='')
+					print(secCols[2].get_text() + '\t', end='')
+					print(secCols[3].get_text())
+			j = j + 1
 
 
 
