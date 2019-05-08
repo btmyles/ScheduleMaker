@@ -47,17 +47,22 @@ headings = table.find('thead').find_all('th')
 
 # Find what index the CourseID is under
 for i in range(len(headings)-1):
-    if 'ID' in headings[i]:
-        indID = i
-# More code needed here to improve robustness
-# Add if statements similar to the 'ID' one.
-indCourse = 1
-indSection = 2
-indTitle = 3
-indInstructor = 4
-indDays = 5
-indTimes = 6
-indRoom = 7
+	if 'ID' in headings[i]:
+		indID = i
+	elif 'Course' in headings[i]:
+		indCourse = i
+	elif 'Section' in headings[i]:
+		indSection = i
+	elif 'Title' in headings[i]:
+		indTitle = i
+	elif 'Instructor' in headings[i]:
+		indInstructor = i
+	elif 'Days' in headings[i]:
+		indDays = i
+	elif 'Times' in headings[i]:
+		indTimes = i
+	elif 'Room' in headings[i]:
+		indRoom = i
 
 # Get all rows
 rows = table.find('tbody').find_all('tr')
