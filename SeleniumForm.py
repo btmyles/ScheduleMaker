@@ -4,13 +4,15 @@ from bs4 import BeautifulSoup
 import re
 
 #Input courseID
-courseID = 'CS*1083'
+courseIn = input("Enter course ID without space: ")
+courseIn = re.match("(.*)(\d\d\d\d)", courseIn)
+courseID = courseIn.groups()[0] + "*" + courseIn.groups()[1]
 
 driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
 
 term = '2019/FA'
 level = 'UG'
-subject = 'CS'
+subject = courseID.split("*")[0]
 location = 'FR'
 
 options = webdriver.FirefoxOptions()
