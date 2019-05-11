@@ -1,5 +1,3 @@
-#! /env/bin/python
-
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from bs4 import BeautifulSoup
@@ -45,19 +43,22 @@ select_subject.select_by_value(location)
 submit = browser.find_element_by_xpath('/html/body/div[1]/div/div/div/div/div/div[4]/form/input[4]')
 submit.click()
 
+# Get page source
+source = browser.page_source
+
 #Save html to file
 with open("page.html", "w") as f:
-    f.write(browser.page_source)
-
-soup = BeautifulSoup(browser.page_source, 'html.parser')
+    f.write(source)
 
 browser.quit()
 
+# Get main table
+soup = BeautifulSoup(source, 'html.parser')
 table = soup.find('table', id='course-list')
 
+# Find what index the CourseID is under
 headings = table.find('thead').find_all('th')
 
-# Find what index the CourseID is under
 for i in range(len(headings)-1):
 	if 'ID' in headings[i]:
 		indID = i
@@ -81,7 +82,6 @@ rows = table.find('tbody').find_all('tr')
 
 # Find the row containing the course specified
 print('Finding times for ' + courseID + ':')
-# Not prepared for a course offered twice
 for i in range(len(rows)-1):
 	if courseID in rows[i].get_text():
 		cols = rows[i].find_all('td')
