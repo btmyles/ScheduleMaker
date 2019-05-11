@@ -1,3 +1,5 @@
+#! /env/bin/python
+
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from bs4 import BeautifulSoup
@@ -5,8 +7,8 @@ import re
 
 #Input courseID
 courseIn = input("Enter course ID without space: ")
-courseIn = re.match("(.*)(\d\d\d\d)", courseIn)
-courseID = courseIn.groups()[0] + "*" + courseIn.groups()[1]
+courseIn = re.match("(\D+)(\d+)", courseIn, re.IGNORECASE)
+courseID = courseIn.groups()[0].upper() + "*" + courseIn.groups()[1]
 
 driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
 
