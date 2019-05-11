@@ -6,32 +6,39 @@ from bs4 import BeautifulSoup
 import re
 
 #Input courseID
-courseIn = input("Enter course ID without space: ")
-courseIn = re.match("(\D+)(\d+)", courseIn, re.IGNORECASE)
-courseID = courseIn.groups()[0].upper() + "*" + courseIn.groups()[1]
+input_line = input("Enter course IDs: ")
 
-driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
+# Separate input by each course
+courses = input_line.split()
 
+# Place asterisk betweene each course
+for index in range(1):
+	temp = re.match("(\D+)(\d+)", courses[index], re.IGNORECASE)
+	courseID = temp.groups()[0].upper() + "*" + temp.groups()[1]
+
+# Loop on this setup
+k = 0
+
+# Get website parameters
 term = '2019/FA'
 level = 'UG'
 subject = courseID.split("*")[0]
 location = 'FR'
 
+#Setup browser
+driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
 options = webdriver.FirefoxOptions()
 options.add_argument('-headless')
-
 browser = webdriver.Firefox(executable_path=driver, options=options)
 browser.get('http://es.unb.ca/apps/timetable/')
 
+# Select website parameters
 select_term = Select(browser.find_element_by_id('term'))
 select_term.select_by_value(term)
-
 select_level = Select(browser.find_element_by_id('level'))
 select_level.select_by_value(level)
-
 select_subject = Select(browser.find_element_by_id('subject'))
 select_subject.select_by_value(subject)
-
 select_subject = Select(browser.find_element_by_id('location'))
 select_subject.select_by_value(location)
 
@@ -44,8 +51,9 @@ with open("page.html", "w") as f:
 
 soup = BeautifulSoup(browser.page_source, 'html.parser')
 
+browser.quit()
+
 table = soup.find('table', id='course-list')
-#print(table.prettify())
 
 headings = table.find('thead').find_all('th')
 
@@ -70,11 +78,9 @@ for i in range(len(headings)-1):
 
 # Get all rows
 rows = table.find('tbody').find_all('tr')
-#print('\n')
-#print(rows)
 
 # Find the row containing the course specified
-print('Finding times:')
+print('Finding times for ' + courseID + ':')
 # Not prepared for a course offered twice
 for i in range(len(rows)-1):
 	if courseID in rows[i].get_text():
@@ -105,8 +111,3 @@ for i in range(len(rows)-1):
 					print(secCols[2].get_text() + '\t', end='')
 					print(secCols[3].get_text())
 			j = j + 1
-
-
-
-
-browser.quit()
