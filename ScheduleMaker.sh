@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 source ./env/bin/activate
-python3 SeleniumForm.py
+python3 ScheduleMaker.py
