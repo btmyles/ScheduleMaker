@@ -3,6 +3,10 @@ from selenium.webdriver.support.select import Select
 from bs4 import BeautifulSoup
 import re
 
+#Functions
+def remove_html_tags(string):
+	return re.sub(r'<[^<]+?>', '', string)
+
 #Input courseID
 input_line = input("Enter course IDs: ")
 
@@ -11,7 +15,7 @@ courses = input_line.split()
 
 # Place asterisk betweene each course
 for index in range(1):
-	temp = re.match("(\D+)(\d+)", courses[index], re.IGNORECASE)
+	temp = re.match(r"(\D+)(\d+)", courses[index], re.IGNORECASE)
 	courseID = temp.groups()[0].upper() + "*" + temp.groups()[1]
 
 # Loop on this setup
@@ -81,7 +85,6 @@ for i in range(len(headings)-1):
 rows = table.find('tbody').find_all('tr')
 
 # Find the row containing the course specified
-
 coursefound = False
 courseduplicate = False
 for i in range(len(rows)-1):
@@ -97,10 +100,26 @@ for i in range(len(rows)-1):
 		coursefound = True
 		cols = rows[i].find_all('td')
 
-		# Print first time slot
-		print('Class\t', end='')
-		print(cols[indDays].get_text() + '\t', end='')
-		print(cols[indTimes].get_text() + '\t')
+		# Place days and times into lists
+		days = str(cols[indDays]).split("<br/>")
+		times = str(cols[indTimes]).split("<br/>")
+
+		# remove html tags
+		for index in range(len(days)):
+			days[index] = remove_html_tags(days[index])
+		for index in range(len(times)):
+			times[index] = remove_html_tags(times[index])
+
+		# Place days and times in list
+		sessions = []
+		for index in range(len(days)):
+			sessions.append([days[index], times[index]])
+
+		# Print class time slots
+		print('Lecture', end='')
+		for session in sessions:
+			print('\t' + session[0], end='')
+			print('\t' + session[1])
 
 		# Print following time slots
 		# Do while the current line has a time slot within it:
@@ -110,11 +129,8 @@ for i in range(len(rows)-1):
 
 			checkNext = False
 
-			#secCols = rows[j+1].find_all('td')
-			#for col in secCols:
-
 			# If the row contains a time slot BUT not a courseCode then read the row
-			if re.search('\d\d:\d\d..-\d\d:\d\d..', rows[j+1].get_text()) and not courseID in rows[j+1].get_text():
+			if re.search(r'\d\d:\d\d..-\d\d:\d\d..', rows[j+1].get_text()) and not courseID in rows[j+1].get_text():
 				# This row should be printed and the next should be checked
 				checkNext = True
 
