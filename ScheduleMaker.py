@@ -28,7 +28,7 @@ for course in courses:
 	location = 'FR'
 
 	#Setup browser
-	driver = '/Users/Ben/Drive/Files/GithubProjects/ScheduleMaker/env/bin/geckodriver'
+	driver = './env/bin/geckodriver'
 	options = webdriver.FirefoxOptions()
 	options.add_argument('-headless')
 	browser = webdriver.Firefox(executable_path=driver, options=options)
