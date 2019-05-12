@@ -135,11 +135,28 @@ for i in range(len(rows)-1):
 				checkNext = True
 
 				# Column indices
-				secCols = rows[i+1].find_all('td')
-				# Indices are consistent in secondary rows
-				print(secCols[0].get_text() + '\t', end='')
-				print(secCols[2].get_text() + '\t', end='')
-				print(secCols[3].get_text())
+				secCols = rows[j+1].find_all('td')
+
+				# Place days and times into lists
+				secdays = str(secCols[2]).split("<br/>")
+				sectimes = str(secCols[3]).split("<br/>")
+
+				# remove html tags
+				for index in range(len(secdays)):
+					secdays[index] = remove_html_tags(secdays[index])
+				for index in range(len(sectimes)):
+					sectimes[index] = remove_html_tags(sectimes[index])
+
+				# Place days and times in list
+				sessions = []
+				for index in range(len(secdays)):
+					sessions.append([secCols[0].get_text(), secdays[index], sectimes[index]])
+
+				for session in sessions:
+					print(session[0] + '\t', end='')
+					print(session[1] + '\t', end='')
+					print(session[2])
+
 			j = j + 1
 
 if courseduplicate:
