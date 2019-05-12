@@ -81,9 +81,20 @@ for i in range(len(headings)-1):
 rows = table.find('tbody').find_all('tr')
 
 # Find the row containing the course specified
-print('Finding times for ' + courseID + ':')
+
+coursefound = False
+courseduplicate = False
 for i in range(len(rows)-1):
-	if courseID in rows[i].get_text():
+
+	# if this course if offered multiple times
+	if coursefound and courseID in rows[i].get_text():
+		courseduplicate = True
+
+	elif courseID in rows[i].get_text() and not coursefound:
+
+		print('Finding times for ' + courseID + ':')
+
+		coursefound = True
 		cols = rows[i].find_all('td')
 
 		# Print first time slot
@@ -98,16 +109,22 @@ for i in range(len(rows)-1):
 		while checkNext:
 
 			checkNext = False
-			secCols = rows[j+1].find_all('td')
-			for col in secCols:
-				# If the row contains a time slot then read the row
-				check = re.search('\d\d:\d\d..-\d\d:\d\d..', col.get_text())
-				if check:
-					# This row should be printed
-					checkNext = True
 
-					# Indices are consistent in secondary rows
-					print(secCols[0].get_text() + '\t', end='')
-					print(secCols[2].get_text() + '\t', end='')
-					print(secCols[3].get_text())
+			#secCols = rows[j+1].find_all('td')
+			#for col in secCols:
+
+			# If the row contains a time slot BUT not a courseCode then read the row
+			if re.search('\d\d:\d\d..-\d\d:\d\d..', rows[j+1].get_text()) and not courseID in rows[j+1].get_text():
+				# This row should be printed and the next should be checked
+				checkNext = True
+
+				# Column indices
+				secCols = rows[i+1].find_all('td')
+				# Indices are consistent in secondary rows
+				print(secCols[0].get_text() + '\t', end='')
+				print(secCols[2].get_text() + '\t', end='')
+				print(secCols[3].get_text())
 			j = j + 1
+
+if courseduplicate:
+	print("This course is a duplicate")
