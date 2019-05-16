@@ -15,13 +15,10 @@ def prep_course(course):
 	return ret
 
 # get the schedule for a course
-def get_schedule(term, lvl, course, loc):
+def get_schedule(term, level, course, location):
 
-	# Get website parameters
-	term = '2019/FA'
-	level = 'UG'
+	# Parse subject
 	subject = course.split("*")[0]
-	location = 'FR'
 
 	#Setup browser
 	driver = './env/bin/geckodriver'
@@ -159,7 +156,7 @@ def get_schedule(term, lvl, course, loc):
 		print("This course is a duplicate")
 
 
-#Input courseID
+#Input courseIDs
 input_line = input("Enter course IDs: ")
 # Separate input by each course
 courses = input_line.split()
@@ -170,4 +167,4 @@ for index in range(len(courses)):
 
 # Testing loop 
 for course in courses:
-	get_schedule('','', course, '')
+	get_schedule('2019/FA','UG', course, 'FR')
