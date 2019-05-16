@@ -4,28 +4,21 @@ from bs4 import BeautifulSoup
 import re
 
 #Functions
+
 def remove_html_tags(string):
 	return re.sub(r'<[^<]+?>', '', string)
 
-#Input courseID
-input_line = input("Enter course IDs: ")
+# Place asterisk in course name and convert to upper
+def prep_course(course):
+	g = re.match(r"(\D+)(\d+)", course, re.IGNORECASE)
+	ret = g.groups()[0].upper() + "*" + g.groups()[1]
+	return ret
 
-# Separate input by each course
-courses = input_line.split()
+# get the schedule for a course
+def get_schedule(term, level, course, location):
 
-# Place asterisk betweene each course
-for index in range(len(courses)):
-	temp = re.match(r"(\D+)(\d+)", courses[index], re.IGNORECASE)
-	courses[index] = temp.groups()[0].upper() + "*" + temp.groups()[1]
-
-# Loop on this setup
-for course in courses:
-
-	# Get website parameters
-	term = '2019/FA'
-	level = 'UG'
+	# Parse subject
 	subject = course.split("*")[0]
-	location = 'FR'
 
 	#Setup browser
 	driver = './env/bin/geckodriver'
@@ -161,3 +154,17 @@ for course in courses:
 
 	if courseduplicate:
 		print("This course is a duplicate")
+
+
+#Input courseIDs
+input_line = input("Enter course IDs: ")
+# Separate input by each course
+courses = input_line.split()
+
+# Place asterisk betweene each course
+for index in range(len(courses)):
+	courses[index] = prep_course(courses[index])
+
+# Testing loop 
+for course in courses:
+	get_schedule('2019/FA','UG', course, 'FR')

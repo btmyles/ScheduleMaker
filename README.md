@@ -13,3 +13,4 @@ Schedule Maker is a Python program which takes UNB course names from the user an
 ## Other goals: 
 * Downloadable image file of schedule
 * Distribute on python distribution
+* Optimize when courses of same subject are given
