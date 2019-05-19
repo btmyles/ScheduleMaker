@@ -29,12 +29,24 @@ class Schedule:
         self.l1.grid(row=4, column=1)
         self.l2.grid(row=5, column=1)
 
-        self.entry_lbl = Label(master, text="Course IDs between spaces:")
-        self.entry_lbl.grid(row=6, column=0)
+        self.entry_lbl = Label(master, text="Course IDs:")
+        self.entry_lbl.grid(row=7, column=0)
 
+        self.e1 = Entry(master)
+        self.e2 = Entry(master)
+        self.e3 = Entry(master)
+        self.e4 = Entry(master)
+        self.e5 = Entry(master)
+        self.e6 = Entry(master)
+        self.e1.grid(row=7, column=1)
+        self.e2.grid(row=8, column=1)
+        self.e3.grid(row=9, column=1)
+        self.e4.grid(row=10, column=1)
+        self.e5.grid(row=11, column=1)
+        self.e6.grid(row=12, column=1)
 
         self.butt = ttk.Button(master, text="Find Courses", command=self.greet)
-        self.butt.grid(row=7, column=0)
+        self.butt.grid(row=14, column=0)
 
         # Set grid spacing
         col_count, row_count = master.grid_size()
@@ -45,7 +57,7 @@ class Schedule:
             master.grid_rowconfigure(row, minsize=20)
 
     def greet(self):
-        print(str(self.term))
+        print(self.e1.get())
 
 root = Tk()
 gui = Schedule(root)
