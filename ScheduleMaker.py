@@ -17,6 +17,9 @@ def prep_course(course):
 # get the schedule for a course
 def get_schedule(term, level, course, location):
 
+	# prep course
+	course = prep_course(course)
+
 	# Parse subject
 	subject = course.split("*")[0]
 
@@ -156,15 +159,15 @@ def get_schedule(term, level, course, location):
 		print("This course is a duplicate")
 
 
-#Input courseIDs
-input_line = input("Enter course IDs: ")
-# Separate input by each course
-courses = input_line.split()
+# #Input courseIDs
+# input_line = input("Enter course IDs: ")
+# # Separate input by each course
+# courses = input_line.split()
 
-# Place asterisk betweene each course
-for index in range(len(courses)):
-	courses[index] = prep_course(courses[index])
+# # Place asterisk betweene each course
+# for index in range(len(courses)):
+# 	courses[index] = prep_course(courses[index])
 
-# Testing loop 
-for course in courses:
-	get_schedule('2019/FA','UG', course, 'FR')
+# # Testing loop 
+# for course in courses:
+# 	get_schedule('2019/FA','UG', course, 'FR')
