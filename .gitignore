@@ -1,5 +1,8 @@
-# Ignore log file
+# Log file
 *.log
 
-# Ignore html file
+# html file
 *.html
+
+# pycache
+__pycache__/
