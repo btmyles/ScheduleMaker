@@ -63,10 +63,10 @@ class Schedule:
         self.output.insert(END, out)
 
     def run(self):
-        time = ScheduleMaker.get_schedule(self.term.get(), 'UG', self.entries[0].get(), self.location.get())
-        self.output_text(time)
-
-
+        for entry in self.entries:
+            if entry.get() != "":
+                time = ScheduleMaker.get_schedule(self.term.get(), 'UG', entry.get(), self.location.get())
+                self.output_text(time)
 
 root = Tk()
 gui = Schedule(root)
