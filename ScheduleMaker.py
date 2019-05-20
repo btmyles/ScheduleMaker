@@ -17,6 +17,9 @@ def prep_course(course):
 # get the schedule for a course
 def get_schedule(term, level, course, location):
 
+	# Setup return variable
+	ret = ""
+
 	# prep course
 	course = prep_course(course)
 
@@ -91,7 +94,7 @@ def get_schedule(term, level, course, location):
 
 		elif course in rows[i].get_text() and not coursefound:
 
-			print('\nFinding times for ' + course + ':')
+			ret += '\nTimes for ' + course + ':\n'
 
 			coursefound = True
 			cols = rows[i].find_all('td')
@@ -112,10 +115,10 @@ def get_schedule(term, level, course, location):
 				sessions.append([days[index], times[index]])
 
 			# Print class time slots
-			print('Lecture', end='')
+			ret += 'Lecture'
 			for session in sessions:
-				print('\t' + session[0], end='')
-				print('\t' + session[1])
+				ret += '\t' + session[0]
+				ret += '\t' + session[1] + '\n'
 
 			# Print following time slots
 			# Do while the current line has a time slot within it:
@@ -149,14 +152,16 @@ def get_schedule(term, level, course, location):
 						sessions.append([secCols[0].get_text(), secdays[index], sectimes[index]])
 
 					for session in sessions:
-						print(session[0] + '\t', end='')
-						print(session[1] + '\t', end='')
-						print(session[2])
+						ret += session[0] + '\t'
+						ret += session[1] + '\t'
+						ret += session[2] + '\n'
 
 				j = j + 1
 
 	if courseduplicate:
-		print("This course is a duplicate")
+		ret += "This course is a duplicate"
+
+	return ret
 
 
 # #Input courseIDs
