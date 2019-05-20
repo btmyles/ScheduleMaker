@@ -38,18 +38,10 @@ class Schedule:
         self.entry_lbl = Label(master, text="Course IDs:")
         self.entry_lbl.grid(row=7, column=0, sticky=W)
 
-        self.e1 = Entry(master)
-        self.e2 = Entry(master)
-        self.e3 = Entry(master)
-        self.e4 = Entry(master)
-        self.e5 = Entry(master)
-        self.e6 = Entry(master)
-        self.e1.grid(row=7, column=1, sticky=W)
-        self.e2.grid(row=8, column=1, sticky=W)
-        self.e3.grid(row=9, column=1, sticky=W)
-        self.e4.grid(row=10, column=1, sticky=W)
-        self.e5.grid(row=11, column=1, sticky=W)
-        self.e6.grid(row=12, column=1, sticky=W)
+        self.entries = []
+        for i in range(6):
+            self.entries.append(Entry(master))
+            self.entries[i].grid(row=i+7, column=1, sticky=W)
 
         # Schedule Button
         self.butt = ttk.Button(master, text="Find Courses", command=self.run)
@@ -67,8 +59,14 @@ class Schedule:
         for row in range(row_count):
             master.grid_rowconfigure(row, minsize=20)
 
+    def output_text(self, out):
+        self.output.insert(END, out)
+
     def run(self):
-        ScheduleMaker.get_schedule(self.term.get(), 'UG', self.e1.get(), self.location.get())
+        time = ScheduleMaker.get_schedule(self.term.get(), 'UG', self.entries[0].get(), self.location.get())
+        self.output_text(time)
+
+
 
 root = Tk()
 gui = Schedule(root)
