@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 import ScheduleMaker
 
 class Schedule:
@@ -12,14 +13,16 @@ class Schedule:
         # Instance variables
         self.term = StringVar()
         self.location = StringVar()
+        self.term_selected = False
+        self.location_selected = False
 
         # Term
         self.term_lbl = Label(master, text="Term:")
         self.term_lbl.grid(row=0, column=0, sticky=W)
 
-        self.t1 = ttk.Radiobutton(master, text="Summer 2019", variable=self.term, value="2019/SM")
-        self.t2 = ttk.Radiobutton(master, text="Fall 2019", variable=self.term, value="2019/FA")
-        self.t3 = ttk.Radiobutton(master, text="Winter 2020", variable=self.term, value="2020/WI")
+        self.t1 = ttk.Radiobutton(master, text="Summer 2019", variable=self.term, command=self.t_selected, value="2019/SM")
+        self.t2 = ttk.Radiobutton(master, text="Fall 2019", variable=self.term, command=self.t_selected, value="2019/FA")
+        self.t3 = ttk.Radiobutton(master, text="Winter 2020", variable=self.term, command=self.t_selected, value="2020/WI")
         self.t1.grid(row=0, column=1, sticky=W)
         self.t2.grid(row=1, column=1, sticky=W)
         self.t3.grid(row=2, column=1, sticky=W)
@@ -28,8 +31,8 @@ class Schedule:
         self.location_lbl = Label(master, text="Location:")
         self.location_lbl.grid(row=4, column=0, sticky=W)
 
-        self.l1 = ttk.Radiobutton(master, text="Saint John", variable=self.location, value="SJ")
-        self.l2 = ttk.Radiobutton(master, text="Fredericton", variable=self.location, value="FR")
+        self.l1 = ttk.Radiobutton(master, text="Saint John", variable=self.location, command=self.l_selected, value="SJ")
+        self.l2 = ttk.Radiobutton(master, text="Fredericton", variable=self.location, command=self.l_selected, value="FR")
         self.l1.grid(row=4, column=1, sticky=W)
         self.l2.grid(row=5, column=1, sticky=W)
 
@@ -64,11 +67,24 @@ class Schedule:
         self.output.insert(END, out)
         self.output.config(state=DISABLED)
 
+    def t_selected(self):
+        self.term_selected = True
+
+    def l_selected(self):
+        self.location_selected = True
+
     def run(self):
-        for entry in self.entries:
-            if entry.get() != "":
-                time = ScheduleMaker.get_schedule(self.term.get(), 'UG', entry.get(), self.location.get())
-                self.output_text(time)
+        # Verify that a term and location have been selected
+        if not self.term_selected:
+            messagebox.showerror("Error", "Select a term")
+        elif not self.location_selected:
+            messagebox.showerror("Error", "Select a location")            
+        else:
+            # Get input from each widget and run schedule finder function
+            for entry in self.entries:
+                if entry.get() != "":
+                    time = ScheduleMaker.get_schedule(self.term.get(), 'UG', entry.get(), self.location.get())
+                    self.output_text(time)
 
 root = Tk()
 gui = Schedule(root)
