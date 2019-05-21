@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 import ScheduleMaker
-import test
 
 class Schedule:
 
@@ -50,6 +49,7 @@ class Schedule:
         # Output
         self.output = Text(master)
         self.output.grid(row=2, column=3, rowspan=12, columnspan=3)
+        self.output.config(state=DISABLED)
 
         # Set grid spacing
         col_count, row_count = master.grid_size()
@@ -60,7 +60,9 @@ class Schedule:
             master.grid_rowconfigure(row, minsize=20)
 
     def output_text(self, out):
+        self.output.config(state=NORMAL)
         self.output.insert(END, out)
+        self.output.config(state=DISABLED)
 
     def run(self):
         for entry in self.entries:
