@@ -1,6 +1,9 @@
 # Log file
 *.log
 
+# DS_Store
+.DS_Store
+
 # html file
 *.html
 
