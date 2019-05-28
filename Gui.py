@@ -1,3 +1,5 @@
+#! ./env/bin/python3
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -78,14 +80,18 @@ class Schedule:
         if not self.term_selected:
             messagebox.showerror("Error", "Select a term")
         elif not self.location_selected:
-            messagebox.showerror("Error", "Select a location")            
+            messagebox.showerror("Error", "Select a location")
         else:
             # Get input from each widget and run schedule finder function
+            value_entered = False
             for entry in self.entries:
                 if entry.get() != "":
+                    value_entered = True
                     time = ScheduleMaker.get_schedule(self.term.get(), 'UG', entry.get(), self.location.get())
                     self.output_text(time)
-
+            # Validate that a course has been entered
+            if not value_entered:
+                messagebox.showerror("Error", "Enter at least one course")
 root = Tk()
 gui = Schedule(root)
 root.mainloop()
