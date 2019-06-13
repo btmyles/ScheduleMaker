@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from bs4 import BeautifulSoup
 import re
+import Course
 
 #Functions
 
@@ -9,22 +10,22 @@ def remove_html_tags(string):
 	return re.sub(r'<[^<]+?>', '', string)
 
 # Place asterisk in course name and convert to upper
-def prep_course(course):
-	g = re.match(r"(\D+)(\d+)", course, re.IGNORECASE)
+def prep_course(course_name):
+	g = re.match(r"(\D+)(\d+)", course_name, re.IGNORECASE)
 	ret = g.groups()[0].upper() + "*" + g.groups()[1]
 	return ret
 
 # get the schedule for a course
-def get_schedule(term, level, course, location):
+def get_schedule(term, level, course_name, location):
 
 	# Setup return variable
 	ret = ""
 
-	# prep course
-	course = prep_course(course)
+	# prep course_name
+	course_name = prep_course(course_name)
 
 	# Parse subject
-	subject = course.split("*")[0]
+	subject = course_name.split("*")[0]
 
 	#Setup browser
 	driver = './env/bin/geckodriver'
@@ -83,18 +84,19 @@ def get_schedule(term, level, course, location):
 	# Get all rows
 	rows = table.find('tbody').find_all('tr')
 
-	# Find the row containing the course specified
+	# Find the row containing the course_name specified
 	coursefound = False
 	courseduplicate = False
+	course_list = list()
 	for i in range(len(rows)-1):
 
 		# if this course if offered multiple times
-		if coursefound and course in rows[i].get_text():
+		if coursefound and course_name in rows[i].get_text():
 			courseduplicate = True
 
-		elif course in rows[i].get_text() and not coursefound:
+		elif course_name in rows[i].get_text() and not coursefound:
 
-			ret += '\nTimes for ' + course + ':\n'
+			ret += '\nTimes for ' + course_name + ':\n'
 
 			coursefound = True
 			cols = rows[i].find_all('td')
@@ -114,11 +116,16 @@ def get_schedule(term, level, course, location):
 			for index in range(len(days)):
 				sessions.append([days[index], times[index]])
 
+			# Create course
+			course_list.append(Course.Course(course_name))
+
 			# Print class time slots
 			ret += 'Lecture'
 			for session in sessions:
 				ret += '\t' + session[0]
 				ret += '\t' + session[1] + '\n'
+				course_list[len(course_list)-1].add_time('Lecture', session[0], session[1])
+
 
 			# Print following time slots
 			# Do while the current line has a time slot within it:
@@ -129,7 +136,7 @@ def get_schedule(term, level, course, location):
 				checkNext = False
 
 				# If the row contains a time slot BUT not a courseCode then read the row
-				if re.search(r'\d\d:\d\d..-\d\d:\d\d..', rows[j+1].get_text()) and not course in rows[j+1].get_text():
+				if re.search(r'\d\d:\d\d..-\d\d:\d\d..', rows[j+1].get_text()) and not course_name in rows[j+1].get_text():
 					# This row should be printed and the next should be checked
 					checkNext = True
 
@@ -155,8 +162,10 @@ def get_schedule(term, level, course, location):
 						ret += session[0] + '\t'
 						ret += session[1] + '\t'
 						ret += session[2] + '\n'
+						course_list[len(course_list)-1].add_time(session[0], session[1], session[2])
 
 				j = j + 1
+				print(course_list[len(course_list)-1].to_string())
 
 	if courseduplicate:
 		ret += "This course is a duplicate"
@@ -169,10 +178,10 @@ def get_schedule(term, level, course, location):
 # # Separate input by each course
 # courses = input_line.split()
 
-# # Place asterisk betweene each course
+# # Place asterisk betweene each course_name
 # for index in range(len(courses)):
 # 	courses[index] = prep_course(courses[index])
 
-# # Testing loop 
+# # Testing loop
 # for course in courses:
 # 	get_schedule('2019/FA','UG', course, 'FR')

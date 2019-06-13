@@ -1,14 +1,23 @@
+import Slot
 
 class Course:
 
-    slots = set()
+    def __init__(self, name):
+        self.name = name
+        self.slots = list()
 
-    def __init__(self):
-        pass
+    def add_time(self, type, days, time):
+        self.slots.append(Slot.Slot(type, days, time))
 
-    def add_time(self, days, time):
-        slots.add(Slot(days, time))
+    def to_string(self):
+        ret = self.name + ": \n"
+
+        for s in self.slots:
+            ret += s.to_string() + "\n"
+
+        return ret
+
 
     # def draw(self):
-    #     for s in slots:
+    #     for s in self.slots:
     #         s.draw()
