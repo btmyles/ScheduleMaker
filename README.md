@@ -10,13 +10,13 @@ Schedule Maker is a Python program which takes UNB course names from the user an
 * Schedule Drawing: OpenCV
 * Application Packaging: PyInstaller
 
-## Milestones:
-* 31 May 2019: Working text-based scheduler for one class
-* 30 June 2019: Working text-based scheduler for multiple classes
-* 31 July 2019: Working GUI program on local computer
-* 31 August 2019: Show schedule as an image
+## Goals:
+* Working text-based scheduler for one class
+* Working text-based scheduler for multiple classes
+* Working GUI program on local computer
+* Show schedule as an image
 
-## Other goals: 
+## Secondary goals: 
 * Downloadable image file of schedule
 * Distribute by creating executables
 * Optimize when courses of same subject are given
